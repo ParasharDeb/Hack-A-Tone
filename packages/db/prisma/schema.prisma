@@ -1,19 +1,32 @@
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Users {
   id       String   @id @default(uuid())
   email    String   @unique
   password String
   username String
 
-  stories  Story[]  
+  places   Places[]  // One-to-many
+}
+
+model Places {
+  id        Int     @id @default(autoincrement())
+  city      String
+  country   String
+  placename String
+  location  String
+
+  userId    String
+  user      Users   @relation(fields: [userId], references: [id])
+
+  story     Story?  // optional back-reference (no @relation here)
 }
 
 model Story {
@@ -21,15 +34,6 @@ model Story {
   placename   String
   description String
 
-  userId      String              
-  user        Users   @relation(fields: [userId], references: [id])
-}
-
-model Places{
-  id                Int         @id @default(autoincrement())
-  city              String
-  country           String
-  placename         String
-  location          String    //need to figure this out 
-
+  placeId     Int     @unique
+  place       Places  @relation(fields: [placeId], references: [id])
 }

@@ -80,3 +80,4 @@ userroutes.post("/signin",async(req,res)=>{
         token:token
     })
 })
+userroutes.get("/profile",middleware)
