@@ -14,3 +14,16 @@ model Users{
   password          String
   username          String
 }
+model Story{
+  id                Int         @id @default(autoincrement())
+  placename         String
+  description       String
+}
+model Places{
+  id                Int         @id @default(autoincrement())
+  city              String
+  country           String
+  placename         String
+  location          String    //need to figure this out 
+
+}
