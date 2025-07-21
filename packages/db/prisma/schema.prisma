@@ -7,18 +7,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Users {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  password String
+  username String
 
-model Users{
-  id                String      @id @default(uuid())
-  email             String      @unique
-  password          String
-  username          String
+  stories  Story[]  
 }
-model Story{
-  id                Int         @id @default(autoincrement())
-  placename         String
-  description       String
+
+model Story {
+  id          Int     @id @default(autoincrement())
+  placename   String
+  description String
+
+  userId      String              
+  user        Users   @relation(fields: [userId], references: [id])
 }
+
 model Places{
   id                Int         @id @default(autoincrement())
   city              String
