@@ -7,4 +7,4 @@ app.use(express.json());
 app.use(cors())
 const router = express.Router;
 app.use("/api/v1/router",mainrouter)
-app.listen(3000)
+app.listen(3001)
