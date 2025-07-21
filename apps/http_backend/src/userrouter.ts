@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "./config";
 
 export const userroutes:Router=express.Router();
-userroutes.post("/singup",async(req,res)=>{
+userroutes.post("/signup",async(req,res)=>{
     const parseddata=Signupschema.safeParse(req.body);
 
     if(!parseddata || !parseddata.success){
@@ -21,7 +21,7 @@ userroutes.post("/singup",async(req,res)=>{
         email:parseddata.data.email
         }
     })
-    if(!user){
+    if(user){
         res.json({
             message:"email already exists"
         })
@@ -66,20 +66,15 @@ userroutes.post("/signin",async(req,res)=>{
         })
         return
     }
-    const passsword = await bcrypt.hash(parseddata.data.password,10)
-    const user = await prismaclient.users.findFirst({
-        where:{
-            password:passsword
-        }
-    })
-    if(!user){
+    const passsword = await bcrypt.compare(parseddata.data.password,useremail.password)
+    if(!passsword){
         res.json({
             message:"incorrect password"
         })
         return
     }
     const token = jwt.sign({
-        userId:user.id
+        userId:useremail.id
     },JWT_SECRET)
     res.json({
         token:token
