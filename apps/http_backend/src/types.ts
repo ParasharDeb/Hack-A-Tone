@@ -8,3 +8,6 @@ export const Signinschema=z.object({
     email:z.email().toLowerCase(),
     password:z.string()
 })
+export const Updateschema=z.object({
+    password:z.string()
+})

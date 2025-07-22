@@ -1,10 +1,11 @@
-import express from "express"
+import express, { Request } from "express"
 import { Router } from "express"
-import { Signupschema,Signinschema} from "./types";
+import { Signupschema,Signinschema, Updateschema} from "./types";
 import {prismaclient} from "@repo/db/client"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "./config";
+import { authMiddleware } from "./middleware";
 
 export const userroutes:Router=express.Router();
 userroutes.post("/signup",async(req,res)=>{
@@ -80,4 +81,23 @@ userroutes.post("/signin",async(req,res)=>{
         token:token
     })
 })
-userroutes.get("/profile",middleware)
+interface updaterequest extends Request {
+    userId:string
+}
+userroutes.put("/update", authMiddleware, async (req, res) => {
+    const parseddata = Updateschema.safeParse(req.body)
+    if (!parseddata || !parseddata.data) {
+        return res.json({
+            message: "Invalid credentials"
+        });
+    }
+
+    await prismaclient.users.update({
+        data:{password:parseddata.data.password},
+        where:{id:(req as updaterequest).userId}
+    })
+
+    res.json({
+        message: "Profile updated"
+    });
+});
