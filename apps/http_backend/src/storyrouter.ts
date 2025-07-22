@@ -1,10 +1,12 @@
-import express,{ Request, Router } from "express"
+import express, { Request, Router } from "express"
 import { api_key } from "./config";
 import axios from "axios";
+
 import { authMiddleware } from "./middleware";
 import { prismaclient } from "@repo/db/client";
-export const storyroutes:Router=express.Router()
-storyroutes.post("/generate",authMiddleware,async(req,res)=>{
+import googleTTS from "google-tts-api";
+export const storyroutes: Router = express.Router()
+storyroutes.post("/generate", authMiddleware, async (req, res) => {
   const userMessage = req.body.message;
   const response = await axios.post(
     "https://api.groq.com/openai/v1/chat/completions",
@@ -23,17 +25,17 @@ storyroutes.post("/generate",authMiddleware,async(req,res)=>{
     }
   );
   const story = response.data.choices[0].message.content;
-  interface Authrequest extends Request{
-    userId:string
+  interface Authrequest extends Request {
+    userId: string
   }
   await prismaclient.story.create({
-    data:{
-        description:story,
-        placename:userMessage,
-        userId:(req as Authrequest).userId
+    data: {
+      description: story,
+      placename: userMessage,
+      userId: (req as Authrequest).userId
     }
   })
-  res.json({ reply:story });
+  res.json({ reply: story });
 })
 storyroutes.get("/bulk", async (req, res) => {
   const filter = req.query.filter || "";
@@ -64,4 +66,26 @@ storyroutes.get("/bulk", async (req, res) => {
       description: story.description,
     })),
   });
+});
+storyroutes.get("/tts", authMiddleware, async (req, res) => {
+  const storyId = req.query.id;
+  if (!storyId) {
+    return res.status(400).json({ error: "Missing story id" });
+  }
+  const story = await prismaclient.story.findUnique({
+    where: { id: Number(storyId) },
+  });
+  if (!story) {
+    return res.status(404).json({ error: "Story not found" });
+  }
+  try {
+    const url = googleTTS.getAudioUrl(story.description, {
+      lang: 'en',
+      slow: false,
+      host: 'https://translate.google.com',
+    });
+    res.json({ audioUrl: url });
+  } catch (e) {
+    res.status(500).json({ error: "TTS generation failed" });
+  }
 });

@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/mainrouter.ts","./src/middleware.ts","./src/storyrouter.ts","./src/types.ts","./src/userrouter.ts"],"version":"5.8.3"}
+{"root":["./src/config.ts","./src/index.ts","./src/mainrouter.ts","./src/middleware.ts","./src/storyrouter.ts","./src/types.ts","./src/userrouter.ts"],"version":"5.8.3"}

@@ -53,6 +53,9 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
+      google-tts-api:
+        specifier: ^2.0.2
+        version: 2.0.2
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -651,6 +654,9 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
+  axios@0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+
   axios@1.10.0:
     resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
 
@@ -1056,6 +1062,9 @@ packages:
   globalthis@1.0.4:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
+
+  google-tts-api@2.0.2:
+    resolution: {integrity: sha512-MkQYbBJEdom8hJpfEVDfD3tpBtkz0X59C+FNsoRhbnCiFjZRnzyurGQ5OrAr3xkigII56/jmk0JNwZsp450G+Q==}
 
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
@@ -2337,6 +2346,12 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
+  axios@0.21.4:
+    dependencies:
+      follow-redirects: 1.15.9
+    transitivePeerDependencies:
+      - debug
+
   axios@1.10.0:
     dependencies:
       follow-redirects: 1.15.9
@@ -2901,6 +2916,12 @@ snapshots:
     dependencies:
       define-properties: 1.2.1
       gopd: 1.2.0
+
+  google-tts-api@2.0.2:
+    dependencies:
+      axios: 0.21.4
+    transitivePeerDependencies:
+      - debug
 
   gopd@1.2.0: {}
 
