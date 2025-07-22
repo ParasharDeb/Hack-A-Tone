@@ -37,7 +37,7 @@ storyroutes.post("/generate", authMiddleware, async (req, res) => {
   })
   res.json({ reply: story });
 })
-storyroutes.get("/bulk", async (req, res) => {
+storyroutes.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
   const stories = await prismaclient.story.findMany({
@@ -87,5 +87,30 @@ storyroutes.get("/tts", authMiddleware, async (req, res) => {
     res.json({ audioUrl: url });
   } catch (e) {
     res.status(500).json({ error: "TTS generation failed" });
+  }
+});
+storyroutes.get("/places", authMiddleware, async (req, res) => {
+  interface Authrequest extends Request {
+    userId: string;
+  }
+  const userId = (req as Authrequest).userId;
+  try {
+    const user = await prismaclient.users.findUnique({
+      where: { id: userId },
+      include: { places: true },
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const places = user.places.map(place => ({
+      id: place.id,
+      city: place.city,
+      country: place.country,
+      placename: place.placename,
+      location: place.location,
+    }));
+    res.json({ places });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch places" });
   }
 });
