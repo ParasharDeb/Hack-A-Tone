@@ -1,19 +1,29 @@
+import { Request, Response, NextFunction } from "express";
 import { JWT_SECRET } from "./config";
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken"
-interface Authrequest extends Request{
-    userId:string
+import jwt from "jsonwebtoken";
+
+interface UpdatedAuth extends Request {
+  userId: string;
 }
-export function middleware(req:Authrequest,res:Response,next:NextFunction){
-    const token=req.headers["authorization"]??" ";
-    const decoded=jwt.verify(token,JWT_SECRET)as {userId : string}
-    if (decoded){
-        req.userId=decoded.userId  
-        next()
-    }
-    else{
-        res.status(403).json({
-            message:"user unauthorized"
-        })
-    }
+
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(403).json({ message: "Authorization header missing or malformed" });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(403).json({ message: "Token missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    (req as UpdatedAuth).userId = decoded.userId;
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
 }
