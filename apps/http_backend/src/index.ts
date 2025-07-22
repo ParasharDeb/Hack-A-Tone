@@ -6,5 +6,5 @@ const app = express()
 app.use(express.json());
 app.use(cors())
 const router = express.Router;
-app.use("/api/v1",mainrouter)
+app.use("/api",mainrouter)
 app.listen(3001)

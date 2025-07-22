@@ -101,3 +101,19 @@ userroutes.put("/update", authMiddleware, async (req, res) => {
         message: "Profile updated"
     });
 });
+userroutes.get("/profile",authMiddleware,async(req,res)=>{
+    const user =await prismaclient.users.findFirst({
+        where:{
+            id:(req as updaterequest).userId
+        }
+    })
+    if(!user){
+        res.json({
+            message:"you are not logged in"
+        })
+    }
+    res.json({user})
+})
+userroutes.post("/preferences",authMiddleware,async(req,res)=>{
+    //need to figure out
+})
