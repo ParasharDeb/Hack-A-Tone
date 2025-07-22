@@ -9,7 +9,7 @@ storyroutes.get("/generate",async(req,res)=>{
     {
       model: "llama3-8b-8192",
       messages: [
-        { role: "system", content: "you are a travel guide" },
+        { role: "system", content: "you are a travel guide. the user will give you a place and you need to tell the user an interesting story about the palce and its history" },
         { role: "user", content: userMessage },
       ],
     },

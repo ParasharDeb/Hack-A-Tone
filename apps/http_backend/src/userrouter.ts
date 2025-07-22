@@ -91,9 +91,9 @@ userroutes.put("/update", authMiddleware, async (req, res) => {
             message: "Invalid credentials"
         });
     }
-
+    const hashedpassword=await bcrypt.hash(parseddata.data.password,10)
     await prismaclient.users.update({
-        data:{password:parseddata.data.password},
+        data:{password:hashedpassword},
         where:{id:(req as updaterequest).userId}
     })
 
