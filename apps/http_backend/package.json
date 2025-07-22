@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@repo/backend-common": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
@@ -18,10 +19,10 @@
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "typescript": "^5.8.3",
-    "zod": "^4.0.5",
-    "@repo/backend-common":"workspace:*"
+    "zod": "^4.0.5"
   }
 }

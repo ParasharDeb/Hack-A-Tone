@@ -1,9 +1,11 @@
-import express, { Router } from "express"
-import { api_key } from "@repo/backend-common/config";
+import express,{ Request, Router } from "express"
+import { api_key } from "./config";
 import axios from "axios";
+import { authMiddleware } from "./middleware";
+import { prismaclient } from "@repo/db/client";
 export const storyroutes:Router=express.Router()
-storyroutes.get("/generate",async(req,res)=>{
-    const userMessage = req.body.message;
+storyroutes.get("/generate",authMiddleware,async(req,res)=>{
+  const userMessage = req.body.message;
   const response = await axios.post(
     "https://api.groq.com/openai/v1/chat/completions",
     {
@@ -20,6 +22,16 @@ storyroutes.get("/generate",async(req,res)=>{
       },
     }
   );
-
-  res.json({ reply: response.data.choices[0].message.content });
+  const story = response.data.choices[0].message.content;
+  interface Authrequest extends Request{
+    userId:string
+  }
+  await prismaclient.story.create({
+    data:{
+        description:story,
+        placename:userMessage,
+        userId:(req as Authrequest).userId
+    }
+  })
+  res.json({ reply:story });
 })
