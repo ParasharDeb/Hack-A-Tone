@@ -4,7 +4,7 @@ import axios from "axios";
 import { authMiddleware } from "./middleware";
 import { prismaclient } from "@repo/db/client";
 export const storyroutes:Router=express.Router()
-storyroutes.get("/generate",authMiddleware,async(req,res)=>{
+storyroutes.post("/generate",authMiddleware,async(req,res)=>{
   const userMessage = req.body.message;
   const response = await axios.post(
     "https://api.groq.com/openai/v1/chat/completions",
@@ -35,3 +35,33 @@ storyroutes.get("/generate",authMiddleware,async(req,res)=>{
   })
   res.json({ reply:story });
 })
+storyroutes.get("/bulk", async (req, res) => {
+  const filter = req.query.filter || "";
+
+  const stories = await prismaclient.story.findMany({
+    where: {
+      OR: [
+        {
+          placename: {
+            contains: filter as string,
+            mode: "insensitive",
+          },
+        },
+        {
+          description: {
+            contains: filter as string,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+  });
+
+  res.json({
+    stories: stories.map((story) => ({
+      id: story.id,
+      placename: story.placename,
+      description: story.description,
+    })),
+  });
+});
