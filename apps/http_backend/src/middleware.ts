@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "@repo/backend-common/config"
 import jwt from "jsonwebtoken";
 
 interface UpdatedAuth extends Request {
@@ -20,7 +20,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as unknown as{ userId: string };
     (req as UpdatedAuth).userId = decoded.userId;
     next();
   } catch (err) {

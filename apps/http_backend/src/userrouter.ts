@@ -4,7 +4,7 @@ import { Signupschema,Signinschema, Updateschema} from "./types";
 import {prismaclient} from "@repo/db/client"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "@repo/backend-common/config";
 import { authMiddleware } from "./middleware";
 
 export const userroutes:Router=express.Router();
