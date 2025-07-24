@@ -61,7 +61,7 @@ dashboardroutes.get("/recomendations", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         const visitedPlaceIds = user.places.map(place => place.id);
-        // Recommend places not visited by the user
+        // Recommend places not visited by the user maybe using ai another todo for you himakshi
         const recommendations = await prismaclient.places.findMany({
             where: {
                 id: { notIn: visitedPlaceIds.length > 0 ? visitedPlaceIds : [0] } // [0] to avoid empty array error
