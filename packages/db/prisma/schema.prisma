@@ -12,21 +12,18 @@ model Users {
   email    String   @unique
   password String
   username String
-  moods    Mood[]
+  audio    Audio[]
   places   Places[]
   stories  Story[]
 }
 
-model Mood {
+model Audio {
   id        Int      @id @default(autoincrement())
-  type      String
+  text      String
   timestamp DateTime @default(now())
-  
+  mood      String
   userId    String
   user      Users    @relation(fields: [userId], references: [id])
-
-  place     Places   @relation("PlaceToMood", fields: [placeId], references: [id])
-  placeId   Int      @unique
 }
 
 model Places {
@@ -34,21 +31,16 @@ model Places {
   city       String
   country    String
   placename  String
-  location   String   // GMap URL
+  location   String   
   timestamp  DateTime @default(now())
-
   userId     String
   user       Users    @relation(fields: [userId], references: [id])
-
-  mood       Mood?    @relation("PlaceToMood", map: "Places_Mood_fkey")
-
 }
 
 model Story {
-  id        Int      @id @default(autoincrement())
-  placename String
-  description String
-  userId    String
-  user      Users    @relation(fields: [userId], references: [id])
-
+  id            Int      @id @default(autoincrement())
+  placename     String
+  description   String
+  userId        String
+  user          Users    @relation(fields: [userId], references: [id])
 }
