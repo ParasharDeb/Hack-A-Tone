@@ -114,6 +114,3 @@ userroutes.get("/profile",authMiddleware,async(req,res)=>{
     }
     res.json({user})
 })
-userroutes.post("/preferences",authMiddleware,async(req,res)=>{
-    //need to figure out
-})

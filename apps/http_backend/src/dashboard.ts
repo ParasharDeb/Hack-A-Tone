@@ -2,10 +2,10 @@ import express, { Request,Router } from "express"
 import { authMiddleware } from "./middleware";
 import { prismaclient } from "@repo/db/client";
 export const dashboardroutes:Router=express.Router();
-dashboardroutes.get("/visited",authMiddleware,async(req,res)=>{
-    interface Authrequest extends Request {
+interface Authrequest extends Request {
         userId:string
     }
+dashboardroutes.get("/visited",authMiddleware,async(req,res)=>{
     const userId=(req as Authrequest).userId;
     try{
         const user =await  prismaclient.users.findUnique({
@@ -30,4 +30,7 @@ dashboardroutes.get("/visited",authMiddleware,async(req,res)=>{
     catch(e){
         res.status(500).json({erorr:e})
     }
+})
+dashboardroutes.get("/history",(req,res)=>{
+
 })

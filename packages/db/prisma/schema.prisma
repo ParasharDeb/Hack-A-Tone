@@ -41,16 +41,14 @@ model Places {
   user       Users    @relation(fields: [userId], references: [id])
 
   mood       Mood?    @relation("PlaceToMood", map: "Places_Mood_fkey")
-  story      Story?   @relation("PlaceToStory", map: "Places_Story_fkey")
+
 }
 
 model Story {
   id        Int      @id @default(autoincrement())
   placename String
-
+  description String
   userId    String
   user      Users    @relation(fields: [userId], references: [id])
 
-  place     Places   @relation("PlaceToStory", fields: [placeId], references: [id])
-  placeId   Int      @unique
 }
