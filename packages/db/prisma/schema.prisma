@@ -12,26 +12,45 @@ model Users {
   email    String   @unique
   password String
   username String
-  story    Story[]
-  places   Places[]  
+  moods    Mood[]
+  places   Places[]
+  stories  Story[]
+}
+
+model Mood {
+  id        Int      @id @default(autoincrement())
+  type      String
+  timestamp DateTime @default(now())
+  
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+
+  place     Places   @relation("PlaceToMood", fields: [placeId], references: [id])
+  placeId   Int      @unique
 }
 
 model Places {
-  id        Int     @id @default(autoincrement())
-  city      String
-  country   String
-  placename String
-  location  String
+  id         Int      @id @default(autoincrement())
+  city       String
+  country    String
+  placename  String
+  location   String   // GMap URL
+  timestamp  DateTime @default(now())
 
-  userId    String
-  user      Users   @relation(fields: [userId], references: [id])
+  userId     String
+  user       Users    @relation(fields: [userId], references: [id])
 
+  mood       Mood?    @relation("PlaceToMood", map: "Places_Mood_fkey")
+  story      Story?   @relation("PlaceToStory", map: "Places_Story_fkey")
 }
 
 model Story {
-  id          Int     @id @default(autoincrement())
-  placename   String
-  description String
-  userId      String 
-  user        Users   @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  placename String
+
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+
+  place     Places   @relation("PlaceToStory", fields: [placeId], references: [id])
+  placeId   Int      @unique
 }
